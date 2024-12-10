@@ -1,0 +1,2 @@
+# Command :
+    - docker-compose up
