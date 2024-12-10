@@ -1,0 +1,4 @@
+#smallest 95 MB
+FROM frolvlad/alpine-python3
+
+

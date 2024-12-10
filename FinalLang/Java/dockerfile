@@ -1,0 +1,12 @@
+#FROM eclipse-temurin
+
+FROM alpine:3.19
+
+ENV JAVA_HOME=/usr/lib/jvm/default-jvm
+
+RUN apk add --no-cache openjdk17 && \
+    ln -sf "${JAVA_HOME}/bin/"* "/usr/bin/"
+
+    #loCation of java : /usr/lib/jvm/java-17-openjdk/bin/java
+    # command to run : 	/usr/lib/jvm/java-17-openjdk/bin/java -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:NewRatio=5 -Xms8M -Xmx{MEMORY_LIMIT_MB}M -Xss64M -DONLINE_JUDGE=true -jar %!
+
