@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/theMitocondria/compiler/internal/config"
+	"github.com/theMitocondria/compiler/internal/http/routers/compile"
 )
 
 func main() {
@@ -21,10 +22,7 @@ func main() {
 	//build images and spin the continers
 
 	//setup router
-	router := http.NewServeMux()
-	router.HandleFunc("GET /api/v1/compile", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("compiled successfully."))
-	})
+	router := compile.InitRouter()
 
 	//setup server
 
@@ -49,10 +47,9 @@ func main() {
 
 	<-done
 
-
 	slog.Info("shutting down the server gracefully")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 4* time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 4*time.Second)
 	defer cancel()
 
 	if err := server.Shutdown(ctx); err != nil {
@@ -60,7 +57,5 @@ func main() {
 	}
 
 	slog.Info("server shutdown successfully")
-
-
 
 }
