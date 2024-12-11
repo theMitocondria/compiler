@@ -1,6 +1,4 @@
 #smallest 300 MB
-FROM frolvlad/alpine-gxx
-
 #docker rmi nameofimage : remove image
 #docker rm nameofcontainer :  remove container
 #docker container ls : list container
@@ -8,33 +6,14 @@ FROM frolvlad/alpine-gxx
 #docker build . -t <custom name>
 #docker images : to list all images
 
+FROM frolvlad/alpine-gxx
+
+
 COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
  
 ENV PATH="/usr/local/go/bin:${PATH}"
 
 COPY server.go server.go
 
-RUN go run server.go
+CMD ["go", "run", "server.go"]
 
-CMD ["bash" ]
-
-
-# # Use a lightweight Go image as the base
-# FROM ubuntu:latest
-# # Install necessary dependencies (e.g., make and g++)
-# # Install necessary packages
-# RUN apt update && apt install -y \
-#     golang \
-#     gcc \
-#     make 
-# # Set the working directory
-# WORKDIR /app
-
-# # Copy the Go source code
-# COPY . .
-
-# # Expose the required port
-# EXPOSE 8080
-
-# # Run the server binary when the container starts
-# CMD ["go", "run", "server.go"]

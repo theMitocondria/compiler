@@ -76,10 +76,9 @@ cat << EOF > temp.cpp
 #include <iostream>
 using namespace std ;
 int main(){
-    int n;
-    cin>>n;
+    int n = 3
 
-    cout<<n;
+    cout<<n*2;
     return ;
 }
 EOF
@@ -92,7 +91,7 @@ if [ ! -f ./temp ]; then
 else 
     ulimit -v 254800 
     #input idhr jaega : echo "$(cat input.txt)"
-    OUTPUT=$(echo "9876" | timeout 1s ./temp 2>&1)
+    OUTPUT=$(echo "2" | timeout 1s ./temp 2>&1)
     EXIT_CODE=$?  # Capture the exit code of the last command
 
     if [ $EXIT_CODE -eq 143  ]; then
