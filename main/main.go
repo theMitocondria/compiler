@@ -20,6 +20,7 @@ func main() {
 	cfg := config.MustLoad()
 
 	//build images and spin the continers
+	
 
 	//setup router
 	router := compile.InitRouter()

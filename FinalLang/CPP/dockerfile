@@ -1,9 +1,0 @@
-#smallest 300 MB
-FROM frolvlad/alpine-gxx
-
-#docker rmi nameofimage : remove image
-#docker rm nameofcontainer :  remove container
-#docker container ls : list container
-#docker run --rm -it <nameofimahe> : run a container of given image and (--rm) to remove it as soon as it is stopped (-it) for interactive like cli -p <p1>:<p2> for assingning p1 to p2 in docker
-#docker build . -t <custom name>
-#docker images : to list all images

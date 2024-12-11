@@ -1,0 +1,40 @@
+#smallest 300 MB
+FROM frolvlad/alpine-gxx
+
+#docker rmi nameofimage : remove image
+#docker rm nameofcontainer :  remove container
+#docker container ls : list container
+#docker run --rm -it <nameofimahe> : run a container of given image and (--rm) to remove it as soon as it is stopped (-it) for interactive like cli -p <p1>:<p2> for assingning p1 to p2 in docker
+#docker build . -t <custom name>
+#docker images : to list all images
+
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+ 
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+COPY server.go server.go
+
+RUN go run server.go
+
+CMD ["bash" ]
+
+
+# # Use a lightweight Go image as the base
+# FROM ubuntu:latest
+# # Install necessary dependencies (e.g., make and g++)
+# # Install necessary packages
+# RUN apt update && apt install -y \
+#     golang \
+#     gcc \
+#     make 
+# # Set the working directory
+# WORKDIR /app
+
+# # Copy the Go source code
+# COPY . .
+
+# # Expose the required port
+# EXPOSE 8080
+
+# # Run the server binary when the container starts
+# CMD ["go", "run", "server.go"]
