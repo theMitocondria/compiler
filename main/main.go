@@ -12,6 +12,7 @@ import (
 
 	"github.com/theMitocondria/compiler/internal/config"
 	"github.com/theMitocondria/compiler/internal/http/routers/compile"
+	spincontainers "github.com/theMitocondria/compiler/internal/utils/spinContainers"
 )
 
 func main() {
@@ -20,10 +21,8 @@ func main() {
 	cfg := config.MustLoad()
 
 	//build images and spin the continers
-
+	spincontainers.SpinContainer()
 	
-	
-
 	//setup router
 	router := compile.InitRouter()
 
