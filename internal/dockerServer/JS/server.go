@@ -34,37 +34,50 @@ func main() {
 
 func runCode() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-			return
-		}
 
 		var req CodeExecutionRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+			response := CodeExecutionResponse{
+				Output: "",
+				Error:  "Failed to parse request body",
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
-		if req.Code == "" || req.Lang == "" {
-			http.Error(w, "Missing code or language in request", http.StatusBadRequest)
-			return
+		scriptWithNewCode := giveCode(req.Code, req.Input)
+
+		cmd := exec.Command("sh", "-c", scriptWithNewCode)
+		out, err := cmd.CombinedOutput()
+
+		var response CodeExecutionResponse
+
+		if err != nil {
+			response.Error = err.Error()
+		} else {
+			response.Output = string(out)
 		}
 
-		if req.Lang != "js" {
-			http.Error(w, "Unsupported language", http.StatusBadRequest)
-			return
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(CodeExecutionResponse{Output: "", Error: "Error encoding response: " + err.Error()})
 		}
+	}
+}
 
-		scriptWithNewCode := `
+func giveCode(code, input string) string {
+	scriptWithNewCode := `
 cat << EOF > temp.js
-` + req.Code + `
+` + code + `
 
 EOF
 
 
 ulimit -v 254800 
 
-OUTPUT=$(echo "` + req.Input + `" | timeout 1s node check.js 2>&1)
+OUTPUT=$(echo "` + input + `" | timeout 1s node check.js 2>&1)
 EXIT_CODE=$?  # Capture the exit code of the last command
 
 if [ $EXIT_CODE -eq 143  ]; then
@@ -90,21 +103,5 @@ fi
 echo "$OUTPUT , $EXIT_CODE"
 
 `
-
-		cmd := exec.Command("sh", "-c", scriptWithNewCode)
-		out, err := cmd.CombinedOutput()
-
-		var response CodeExecutionResponse
-
-		if err != nil {
-			response.Error = err.Error()
-		} else {
-			response.Output = string(out)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, "Error encoding response: "+err.Error(), http.StatusInternalServerError)
-		}
-	}
+	return scriptWithNewCode
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 	"os/exec"
@@ -35,28 +34,40 @@ func main() {
 
 func runCode() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-			return
-		}
 
 		var req CodeExecutionRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+			response := CodeExecutionResponse{
+				Output: "",
+				Error:  "Failed to parse request body",
+			}
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(response)
 			return
 		}
 
-		if req.Code == "" || req.Lang == "" {
-			http.Error(w, "Missing code or language in request", http.StatusBadRequest)
-			return
+		scriptWithNewCode := giveCode(req.Code, req.Input)
+		cmd := exec.Command("sh", "-c", scriptWithNewCode)
+		out, err := cmd.CombinedOutput()
+
+		var response CodeExecutionResponse
+
+		if err != nil {
+			response.Error = err.Error()
+		} else {
+			response.Output = string(out)
 		}
 
-		if req.Lang != "py" {
-			http.Error(w, "Unsupported language", http.StatusBadRequest)
-			return
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(CodeExecutionResponse{Output: "", Error: "Error encoding response: " + err.Error()})
 		}
+	}
+}
 
-		scriptWithNewCode := `
+func giveCode(code, input string) string {
+	scriptWithNewCode := `
 cat << 'EOF' > temp.py
 import builtins
 import os
@@ -70,8 +81,8 @@ os.stetgid = None
 
 # User code goes here
 ` +
-			req.Code +
-			`
+		code +
+		`
 EOF
 
 # Syntax check the Python code
@@ -84,7 +95,7 @@ if [ $EXIT_CODE -ne 0 ]; then
 else
     # Set a memory limit and run the Python script with a timeout
     ulimit -v 284800  # Limit memory to 284 MB
-    OUTPUT=$(echo "` + req.Input + `" | timeout 1s python3 temp.py 2>&1)
+    OUTPUT=$(echo "` + input + `" | timeout 1s python3 temp.py 2>&1)
     EXIT_CODE=$?
 
     # Handle different exit codes
@@ -105,21 +116,6 @@ else
     # Output the result
     echo "$OUTPUT"
 fi`
-		fmt.Println(scriptWithNewCode)
-		cmd := exec.Command("sh", "-c", scriptWithNewCode)
-		out, err := cmd.CombinedOutput()
 
-		var response CodeExecutionResponse
-
-		if err != nil {
-			response.Error = err.Error()
-		} else {
-			response.Output = string(out)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, "Error encoding response: "+err.Error(), http.StatusInternalServerError)
-		}
-	}
+	return scriptWithNewCode
 }

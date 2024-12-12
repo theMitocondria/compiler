@@ -34,30 +34,38 @@ func main() {
 
 func runCode() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
-			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-			return
-		}
 
 		var req CodeExecutionRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, "Failed to parse request body", http.StatusBadRequest)
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(CodeExecutionResponse{Output: "", Error: "Failed to parse request body"})
 			return
 		}
 
-		if req.Code == "" || req.Lang == "" {
-			http.Error(w, "Missing code or language in request", http.StatusBadRequest)
-			return
+		scriptWithNewCode := giveCode(req.Code, req.Input)
+		cmd := exec.Command("sh", "-c", scriptWithNewCode)
+		out, err := cmd.CombinedOutput()
+
+		var response CodeExecutionResponse
+
+		if err != nil {
+			response.Error = err.Error()
+		} else {
+			response.Output = string(out)
 		}
 
-		if req.Lang != "java" {
-			http.Error(w, "Unsupported language", http.StatusBadRequest)
-			return
+		w.Header().Set("Content-Type", "application/json")
+		if err := json.NewEncoder(w).Encode(response); err != nil {
+			w.Header().Set("Content-Type", "application/json")
+			json.NewEncoder(w).Encode(CodeExecutionResponse{Output: "", Error: "Error encoding response: " + err.Error()})
 		}
+	}
+}
 
-		scriptWithNewCode := `
+func giveCode(code, input string) string {
+	scriptWithNewCode := `
 cat << EOF > Main.java
-` + req.Code + `
+` + code + `
 
 EOF
 
@@ -72,7 +80,7 @@ else
 
     jar cfm Main.jar manifest.txt Main.class
 
-    OUTPUT=$(echo  "` + req.Input + `"  | timeout 1s /usr/lib/jvm/java-17-openjdk/bin/java -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:NewRatio=5 -Xms8M -Xmx128M -Xss64M -DONLINE_JUDGE=true -jar Main.jar  2>&1)
+    OUTPUT=$(echo  "` + input + `"  | timeout 1s /usr/lib/jvm/java-17-openjdk/bin/java -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:NewRatio=5 -Xms8M -Xmx128M -Xss64M -DONLINE_JUDGE=true -jar Main.jar  2>&1)
     EXIT_CODE=$?  # Capture the exit code of the last command
 
     if [ $EXIT_CODE -eq 143  ]; then
@@ -110,21 +118,5 @@ else
 
 fi
 `
-
-		cmd := exec.Command("sh", "-c", scriptWithNewCode)
-		out, err := cmd.CombinedOutput()
-
-		var response CodeExecutionResponse
-
-		if err != nil {
-			response.Error = err.Error()
-		} else {
-			response.Output = string(out)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			http.Error(w, "Error encoding response: "+err.Error(), http.StatusInternalServerError)
-		}
-	}
+	return scriptWithNewCode
 }
