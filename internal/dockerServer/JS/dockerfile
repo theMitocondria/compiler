@@ -1,3 +1,12 @@
 FROM mhart/alpine-node:latest
 
-COPY check.js /check.js
+COPY check.js check.js
+
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+ 
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+COPY server.go server.go
+
+
+CMD ["go", "run", "server.go"]
