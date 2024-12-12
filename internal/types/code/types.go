@@ -1,12 +1,24 @@
 package codeTypes
 
-type CompileCodeRequest struct {
-	Code  string
-	Lang  string
-	Input string
+type CodeExecutionRequest struct {
+	Code  string `json:"code"`
+	Lang  string `json:"lang"`
+	Input string `json:"input"`
 }
 
-type CompiledCodeResponse struct {
-	Output string
-	Error  string
+type CodeExecutionResponse struct {
+	Output string `json:"output"`
+	Error  string `json:"error"`
+}
+
+type Container struct {
+	ID    string
+	InUse bool
+	Lang  string
+	Port  string
+}
+
+type LoadBalancer struct {
+	Containers []Container
+	MaxLoad    int
 }
