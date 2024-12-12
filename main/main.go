@@ -10,30 +10,28 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/theMitocondria/compiler/internal/config"
 	"github.com/theMitocondria/compiler/internal/http/routers/compile"
 	spincontainers "github.com/theMitocondria/compiler/internal/utils/spinContainers"
 )
 
 func main() {
 
-	//load config
-	cfg := config.MustLoad()
-
 	//build images and spin the continers
-	spincontainers.SpinContainer()
-	
+	go func() {
+		spincontainers.SpinContainer()
+		slog.Info("containers spined")
+	}()
 	//setup router
 	router := compile.InitRouter()
 
 	//setup server
 
 	server := http.Server{
-		Addr:    cfg.Addr,
+		Addr:    "localhost:3000",
 		Handler: router,
 	}
 
-	slog.Info("server stared", slog.String("address: ", cfg.Addr))
+	slog.Info("server stared")
 
 	done := make(chan os.Signal, 1)
 

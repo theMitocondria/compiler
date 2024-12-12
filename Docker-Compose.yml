@@ -71,23 +71,23 @@ services:
   #   ports:
   #     - "8092:8080"
 
-  web13 : 
-    container_name : Java3
-    image: imagejava
-    ports:
-      - "8093:8080"
+  # web13 : 
+  #   container_name : Java3
+  #   image: imagejava
+  #   ports:
+  #     - "8093:8080"
 
-  web14 : 
-    container_name : Java4
-    image: imagejava
-    ports:
-      - "8094:8080"
+  # web14 : 
+  #   container_name : Java4
+  #   image: imagejava
+  #   ports:
+  #     - "8094:8080"
 
-  web15 : 
-    container_name : Java5
-    image: imagejava
-    ports:
-      - "8095:8080"
+  # web15 : 
+  #   container_name : Java5
+  #   image: imagejava
+  #   ports:
+  #     - "8095:8080"
 
   # web16 : 
   #   container_name : Py1

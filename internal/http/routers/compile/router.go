@@ -8,6 +8,7 @@ import (
 
 func InitRouter() *http.ServeMux {
 	router := http.NewServeMux()
-	router.HandleFunc("GET /api/v1/compile", compile.CompileCode())
+	router.HandleFunc("GET /api/v1/helloworld", compile.HelloWorld())
+	router.HandleFunc("POST /api/v1/compile", compile.CompileCode())
 	return router
 }

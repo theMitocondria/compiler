@@ -20,7 +20,7 @@ type CodeExecutionResponse struct {
 
 func main() {
 	router := http.NewServeMux()
-	router.HandleFunc("/compile", runCode())
+	router.HandleFunc("/compile", RunCode())
 
 	server := http.Server{
 		Addr:    "0.0.0.0:8080",
@@ -32,7 +32,7 @@ func main() {
 	}
 }
 
-func runCode() http.HandlerFunc {
+func RunCode() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
