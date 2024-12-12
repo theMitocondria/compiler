@@ -10,3 +10,14 @@ RUN apk add --no-cache openjdk17 && \
     #loCation of java : /usr/lib/jvm/java-17-openjdk/bin/java
     # command to run : 	/usr/lib/jvm/java-17-openjdk/bin/java -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -XX:NewRatio=5 -Xms8M -Xmx{MEMORY_LIMIT_MB}M -Xss64M -DONLINE_JUDGE=true -jar %!
 
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+
+ENV PATH="/usr/local/go/bin:${PATH}"
+
+WORKDIR /app
+
+COPY server.go server.go
+
+EXPOSE 8080
+
+CMD ["go", "run", "server.go"]

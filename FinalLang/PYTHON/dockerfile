@@ -1,4 +1,14 @@
 #smallest 95 MB
 FROM frolvlad/alpine-python3
 
+COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
+ 
+ENV PATH="/usr/local/go/bin:${PATH}"
 
+WORKDIR /app
+
+COPY server.go server.go
+
+EXPOSE 8080
+
+CMD ["go", "run", "server.go"]

@@ -15,18 +15,26 @@
 
 cat << EOF > temp.cpp
 //some code
+#include <iostream>
+using namespace std ;
+int main(){
+    int n;
+    cin>>n;
+
+    cout<<n;
+    return 0;
+}
 EOF
 
 
-COMPILE_ERROR=$(g++ -o temp temp.cpp -DONLINE_JUDGE  -Wl,--stack=268435456 -std=c++20)
+OUTPUT=$(g++ -o temp temp.cpp 2>&1)
 
 if [ ! -f ./temp ]; then
     echo "Compilation failed with the following error:"
-    echo "$COMPILE_ERROR"
 else 
     ulimit -v 254800 
-
-    OUTPUT=$(echo "100 100" | timeout 1s ./temp 2>&1)
+    #input idhr jaega : echo "$(cat input.txt)"
+    OUTPUT=$(echo "9876" | timeout 1s ./temp 2>&1)
     EXIT_CODE=$?  # Capture the exit code of the last command
 
     if [ $EXIT_CODE -eq 143  ]; then
@@ -46,7 +54,6 @@ else
         OUTPUT="Error: Program terminated unexpectedly."
     fi
 
-    echo "$OUTPUT , $EXIT_CODE"
 fi
 
 if [ -f temp ]; then
@@ -56,3 +63,5 @@ fi
 if [ -f temp.cpp ]; then
     rm temp.cpp
 fi
+
+echo "$OUTPUT "

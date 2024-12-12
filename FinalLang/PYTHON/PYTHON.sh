@@ -54,9 +54,10 @@ else
         TLE="false"
     fi
 
+    # Cleanup the Python script
+    rm temp.py
     # Output the result
     echo "$OUTPUT , $EXIT_CODE"
 fi
 
-# Cleanup the Python script
-rm temp.py
+
