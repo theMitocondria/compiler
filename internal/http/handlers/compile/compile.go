@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"sync"
+	"time"
 
 	codeTypes "github.com/theMitocondria/compiler/internal/types/code"
 )
@@ -20,13 +22,15 @@ func HelloWorld() http.HandlerFunc {
 func CompileCode(loadBalancer *codeTypes.LoadBalancer, mu *sync.Mutex) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req codeTypes.CodeExecutionRequest
+
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to parse the body"})
 			return
 		}
+		t := time.Now()
+		slog.Info("Current second", "second", t.Nanosecond())
 
 		mu.Lock()
-		defer mu.Unlock()
 
 		// Find an available container
 		var container *codeTypes.Container
@@ -38,83 +42,62 @@ func CompileCode(loadBalancer *codeTypes.LoadBalancer, mu *sync.Mutex) http.Hand
 		}
 
 		if container == nil {
+			mu.Unlock()
 			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "No available container"})
+
 			return
 		}
 
 		// Mark the container as in use
 		container.InUse = true
+		mu.Unlock()
 
-		// Execute the code
+		// Channel to receive the result
+		resultChan := make(chan codeTypes.CodeExecutionResponse)
+		errorChan := make(chan error)
+
 		go func() {
 			defer func() {
 				mu.Lock()
 				container.InUse = false
 				mu.Unlock()
 			}()
-			// Convert the request to a JSON string for printing
-			reqJSON, err := json.Marshal(req)
+
+			payload, err := json.Marshal(req)
 			if err != nil {
-				mu.Lock()
-				json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to marshal request payload"})
-				mu.Unlock()
-				return
-			} // Print the JSON string
-			fmt.Println(string(reqJSON))
-			payload, err := json.Marshal(map[string]string{"code": req.Code, "input": req.Input})
-			if err != nil {
-				mu.Lock()
-				json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to marshal request payload"})
-				mu.Unlock()
+				errorChan <- fmt.Errorf("Failed to marshal request payload")
 				return
 			}
 
+			fmt.Println(fmt.Sprintf("http://localhost:%s/compile", container.Port))
 			resp, err := http.Post(fmt.Sprintf("http://localhost:%s/compile", container.Port), "application/json", bytes.NewBuffer(payload))
-			fmt.Println(resp)
-			fmt.Println(err)
-
 			if err != nil {
-				mu.Lock()
-				json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to send request to container"})
-				mu.Unlock()
+				errorChan <- fmt.Errorf("Failed to send request to container")
 				return
 			}
 
 			defer resp.Body.Close()
 			respBody, err := io.ReadAll(resp.Body)
-
 			if err != nil {
-				mu.Lock()
-				json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to read response from container"})
-				mu.Unlock()
+				errorChan <- fmt.Errorf("Failed to read response from container")
 				return
 			}
-
-			//yha tak
 
 			var result codeTypes.CodeExecutionResponse
-			// if err := json.Unmarshal(respBody, &result); err != nil {
-			// 	mu.Lock()
-			// 	json.NewEncoder(w).Encode(map[string]string{"output": "uiu", "error": "Failed to unmarshal response"})
-			// 	mu.Unlock()
-			// 	return
-			// }
-
-			if err := "gh"; err != "oi" {
-				fmt.Println("Unmarshal Error:", err)
-				fmt.Println("Response Body:", string(respBody))
-				mu.Lock()
-				json.NewEncoder(w).Encode(map[string]string{"output": "wertyuio", "error": "Failed to unmarshal response"})
-				mu.Unlock()
+			if err := json.Unmarshal(respBody, &result); err != nil {
+				errorChan <- fmt.Errorf("Failed to unmarshal response")
 				return
 			}
 
-			fmt.Println(result)
+			resultChan <- result
+		}()
 
-			mu.Lock()
+		select {
+		case result := <-resultChan:
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(result)
-			mu.Unlock()
-		}()
+		case err := <-errorChan:
+			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": err.Error()})
+		}
 	}
 }

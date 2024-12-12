@@ -91,33 +91,33 @@ services:
 
   web16 : 
     container_name : Py1
-    image : pyhton
+    image : lcpolice/python
     ports:
       - "8096:8080"
 
-  # web17 : 
-  #   container_name : Py2
-  #   image: lcpolice/python
-  #   ports:
-  #     - "8097:8080"
+  web17 : 
+    container_name : Py2
+    image: lcpolice/python
+    ports:
+      - "8097:8080"
 
-  # web18 : 
-  #   container_name : Py3
-  #   image: lcpolice/python
-  #   ports:
-  #     - "8098:8080"
+  web18 : 
+    container_name : Py3
+    image: lcpolice/python
+    ports:
+      - "8098:8080"
 
-  # web19 : 
-  #   container_name : Py4
-  #   image: python
-  #   ports:
-  #     - "8099:8080"
+  web19 : 
+    container_name : Py4
+    image: lcpolice/python
+    ports:
+      - "8099:8080"
 
-  # web20 : 
-  #   container_name : Py5
-  #   image: lcpolice/python
-  #   ports:
-  #     - "8100:8080"
+  web20 : 
+    container_name : Py5
+    image: lcpolice/python
+    ports:
+      - "8100:8080"
 
 
   

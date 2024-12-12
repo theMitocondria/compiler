@@ -1,5 +1,7 @@
 package codeTypes
 
+import "sync"
+
 type CodeExecutionRequest struct {
 	Code  string `json:"code"`
 	Lang  string `json:"lang"`
@@ -11,7 +13,6 @@ type CodeExecutionResponse struct {
 	Error  string `json:"error"`
 }
 
-
 type Container struct {
 	ID    string
 	InUse bool
@@ -22,4 +23,9 @@ type Container struct {
 type LoadBalancer struct {
 	Containers []Container
 	MaxLoad    int
+}
+
+type RequestQueue struct {
+	Queue []CodeExecutionRequest
+	Mu    sync.Mutex
 }
