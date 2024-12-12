@@ -1,130 +1,130 @@
 services:
   web1 :
     container_name : cpp1 
-    image : frolvlad/alpine-gxx
+    image : imagecpp
     ports:
       - "8081:8080"
 
   web2 : 
     container_name : cpp2 
-    image: frolvlad/alpine-gxx
+    image: imagecpp
     ports:
       - "8082:8080"
 
-  web3 : 
-    container_name : cpp3
-    image: frolvlad/alpine-gxx
-    ports:
-      - "8083:8080"
+  # web3 : 
+  #   container_name : cpp3
+  #   image: imagecpp
+  #   ports:
+  #     - "8083:8080"
 
-  web4 : 
-    container_name : cpp4
-    image: frolvlad/alpine-gxx 
-    ports:
-      - "8084:8080"
+  # web4 : 
+  #   container_name : cpp4
+  #   image: imagecpp
+  #   ports:
+  #     - "8084:8080"
 
-  web5 : 
-    container_name : cpp5
-    image: frolvlad/alpine-gxx
-    ports:
-      - "8085:8080"
+  # web5 : 
+  #   container_name : cpp5
+  #   image: imagecpp
+  #   ports:
+  #     - "8085:8080"
 
-  web6 : 
-    container_name : JS1
-    image : lcpolice/alpine_js
-    ports:
-      - "8086:8080"
+  # web6 : 
+  #   container_name : JS1
+  #   image : lcpolice/alpine_js
+  #   ports:
+  #     - "8086:8080"
 
-  web7 : 
-    container_name : JS2
-    image: lcpolice/alpine_js
-    ports:
-      - "8087:8080"
+  # web7 : 
+  #   container_name : JS2
+  #   image: lcpolice/alpine_js
+  #   ports:
+  #     - "8087:8080"
 
-  web8 : 
-    container_name : JS3
-    image: lcpolice/alpine_js
-    ports:
-      - "8088:8080"
+  # web8 : 
+  #   container_name : JS3
+  #   image: lcpolice/alpine_js
+  #   ports:
+  #     - "8088:8080"
 
-  web9 : 
-    container_name : JS4
-    image: lcpolice/alpine_js
-    ports:
-      - "8089:8080"
+  # web9 : 
+  #   container_name : JS4
+  #   image: lcpolice/alpine_js
+  #   ports:
+  #     - "8089:8080"
 
-  web10 : 
-    container_name : JS5
-    image: lcpolice/alpine_js
-    ports:
-      - "8090:8080"
+  # web10 : 
+  #   container_name : JS5
+  #   image: lcpolice/alpine_js
+  #   ports:
+  #     - "8090:8080"
 
-  web11 :
-    container_name : Java1
-    image : lcpolice/alpine_java
-    ports:
-      - "8091:8080"
+  # web11 :
+  #   container_name : Java1
+  #   image : imagejava
+  #   ports:
+  #     - "8091:8080"
 
-  web12 : 
-    container_name : Java2
-    image: lcpolice/alpine_java
-    ports:
-      - "8092:8080"
+  # web12 : 
+  #   container_name : Java2
+  #   image: imagejava
+  #   ports:
+  #     - "8092:8080"
 
-  web13 : 
-    container_name : Java3
-    image: lcpolice/alpine_java
-    ports:
-      - "8093:8080"
+  # web13 : 
+  #   container_name : Java3
+  #   image: imagejava
+  #   ports:
+  #     - "8093:8080"
 
-  web14 : 
-    container_name : Java4
-    image: lcpolice/alpine_java
-    ports:
-      - "8094:8080"
+  # web14 : 
+  #   container_name : Java4
+  #   image: imagejava
+  #   ports:
+  #     - "8094:8080"
 
-  web15 : 
-    container_name : Java5
-    image: lcpolice/alpine_java
-    ports:
-      - "8095:8080"
+  # web15 : 
+  #   container_name : Java5
+  #   image: imagejava
+  #   ports:
+  #     - "8095:8080"
 
-  web16 : 
-    container_name : Py1
-    image : frolvlad/alpine-python3
-    ports:
-      - "8096:8080"
+  # web16 : 
+  #   container_name : Py1
+  #   image : frolvlad/alpine-python3
+  #   ports:
+  #     - "8096:8080"
 
-  web17 : 
-    container_name : Py2
-    image: frolvlad/alpine-python3
-    ports:
-      - "8097:8080"
+  # web17 : 
+  #   container_name : Py2
+  #   image: frolvlad/alpine-python3
+  #   ports:
+  #     - "8097:8080"
 
-  web18 : 
-    container_name : Py3
-    image: frolvlad/alpine-python3
-    ports:
-      - "8098:8080"
+  # web18 : 
+  #   container_name : Py3
+  #   image: frolvlad/alpine-python3
+  #   ports:
+  #     - "8098:8080"
 
-  web19 : 
-    container_name : Py4
-    image: frolvlad/alpine-python3
-    ports:
-      - "8099:8080"
+  # web19 : 
+  #   container_name : Py4
+  #   image: frolvlad/alpine-python3
+  #   ports:
+  #     - "8099:8080"
 
-  web20 : 
-    container_name : Py5
-    image: frolvlad/alpine-python3
-    ports:
-      - "8100:8080"
-
-
-  # ... similarly for web3, web4, and web5
+  # web20 : 
+  #   container_name : Py5
+  #   image: frolvlad/alpine-python3
+  #   ports:
+  #     - "8100:8080"
 
 
+  # # ... similarly for web3, web4, and web5
 
-  #register krde apni chaaro image 
+
+
+  # #register krde apni chaaro image 
 
   
 

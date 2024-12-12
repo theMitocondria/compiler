@@ -23,7 +23,7 @@ os.system = None
 os.stetgid = None
 
 # User code goes here
-os.system("ls")
+print(100)
 EOF
 
 # Syntax check the Python code
@@ -37,8 +37,6 @@ else
     # Set a memory limit and run the Python script with a timeout
     ulimit -v 284800  # Limit memory to 284 MB
     OUTPUT=$(echo "25" | timeout 1s python3 temp.py 2>&1)
-
-    # Capture the exit code of the Python script execution
     EXIT_CODE=$?
 
     # Handle different exit codes
@@ -57,7 +55,12 @@ else
     # Cleanup the Python script
     rm temp.py
     # Output the result
+<<<<<<< HEAD:FinalLang/PYTHON/PYTHON.sh
     echo "$OUTPUT , $EXIT_CODE"
 fi
 
 
+=======
+    echo "$OUTPUT"
+fi
+>>>>>>> b9d3caae3d8bafae8ed17eaf27e9332c194fc013:internal/dockerServer/PYTHON/PYTHON.sh

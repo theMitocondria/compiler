@@ -1,6 +1,4 @@
 #smallest 300 MB
-FROM frolvlad/alpine-gxx
-
 #docker rmi nameofimage : remove image
 #docker rm nameofcontainer :  remove container
 #docker container ls : list container
@@ -8,10 +6,16 @@ FROM frolvlad/alpine-gxx
 #docker build . -t <custom name>
 #docker images : to list all images
 
+<<<<<<< HEAD:FinalLang/CPP/dockerfile
+=======
+FROM frolvlad/alpine-gxx
+
+>>>>>>> b9d3caae3d8bafae8ed17eaf27e9332c194fc013:internal/dockerServer/CPP/dockerfile
 COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
  
 ENV PATH="/usr/local/go/bin:${PATH}"
 
+<<<<<<< HEAD:FinalLang/CPP/dockerfile
 WORKDIR /app
 
 COPY server.go server.go
@@ -19,3 +23,9 @@ COPY server.go server.go
 EXPOSE 8080
 
 CMD ["go", "run", "server.go"]
+=======
+COPY server.go server.go
+
+CMD ["go", "run", "server.go"]
+
+>>>>>>> b9d3caae3d8bafae8ed17eaf27e9332c194fc013:internal/dockerServer/CPP/dockerfile
