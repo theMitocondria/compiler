@@ -18,3 +18,15 @@ post request
     code 
     input 
 } -->
+
+
+# # ... similarly for web3, web4, and web5
+
+
+
+  # #register krde apni chaaro image 
+
+  
+
+#1 container ps => konse chlre h 
+#2 container exist krta h abhi bhi lekin currently koi command execute nhi krra

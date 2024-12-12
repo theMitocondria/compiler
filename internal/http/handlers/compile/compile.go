@@ -28,7 +28,7 @@ func CompileCode() http.HandlerFunc {
 			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to marshal request payload"})
 		}
 
-		resp, err := http.Post("http://localhost:8081/compile", "application/json", bytes.NewBuffer(payload))
+		resp, err := http.Post("http://localhost:8089/compile", "application/json", bytes.NewBuffer(payload))
 		if err != nil {
 			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to send request to container"})
 			return
