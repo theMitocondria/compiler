@@ -22,7 +22,7 @@
 #         print(f"Request failed: {e}")
 
 # # Number of concurrent requests
-# num_requests = 30
+# num_requests = 10
 
 # # Use ThreadPoolExecutor for concurrent requests
 # with ThreadPoolExecutor(max_workers=num_requests) as executor:
@@ -137,4 +137,4 @@ def load_test(num_requests):
     print(f"Load test completed in {end_time - start_time:.2f} seconds.")
 
 # Run the load test with 5000 concurrent requests
-load_test(5000)
+load_test(2000)

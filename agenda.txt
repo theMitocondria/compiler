@@ -1,0 +1,51 @@
+//pseudo code 
+queue cppc , pyc , jsc , javac ;
+int in_execution = 0 ;
+queue default_container
+cpp(body){
+	mutex.lock()
+	//agr yha pe h to maximum abhi 4 threads me execute hora h ... agr charo cpp ke bhi h to bhi ek cpp ka khali betha h
+	first_container = cppc.front  //isk mtlb ye last time sabse late execute hua hoga 
+	cppc.pop()
+	mutex.unlock()
+	//execution pr laga time limit => gar koi response na de => toh usko daalde default container me 
+	resp = first_container(code , input)
+	if(time_limt_exced to run hoye ){
+		mutex.lovk()
+		default_container(container in execution ko) x baari pda hua h to rerun krdio
+		mutex.unlock()
+	}
+	mutex.lock()
+	cppc.back_push(first_container)
+	mutex.unlock()
+	return 
+}
+compile_code(code){
+	while(in_execution == 5) ;
+	mutex.lock();
+	in_execution += 1;
+	mutex.unlock()
+	response ;
+	switch (lang):
+		case cpp :
+			response = cpp(body)
+			break;
+		case java :
+			response = java(body)
+			break;
+		case js :
+			response = js(body)
+			break;
+		case python :
+			response = py(body)
+			break;
+	mutex.lovk()
+	in_execution -=1 ;
+	mutex.unlock();
+	return response ;
+}
+
+
+main_code(){
+	post('/compile',go compile_code(body));
+}
