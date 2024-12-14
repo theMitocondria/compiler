@@ -1,123 +1,246 @@
+version: '3'
+
 services:
-  web1 :
-    container_name : cpp1 
-    image : lcpolice/cpp
+  # C++ services
+  cpp1:
+    container_name: cpp1
+    image: lcpolice/cpp
     ports:
       - "8081:8080"
 
-  web2 : 
-    container_name : cpp2 
+  cpp2:
+    container_name: cpp2
     image: lcpolice/cpp
     ports:
       - "8082:8080"
 
-  web3 : 
-    container_name : cpp3
+  cpp3:
+    container_name: cpp3
     image: lcpolice/cpp
     ports:
       - "8083:8080"
 
-  web4 : 
-    container_name : cpp4
+  cpp4:
+    container_name: cpp4
     image: lcpolice/cpp
     ports:
       - "8084:8080"
 
-  web5 : 
-    container_name : cpp5
+  cpp5:
+    container_name: cpp5
     image: lcpolice/cpp
     ports:
       - "8085:8080"
 
-  web6 : 
-    container_name : JS1
-    image : lcpolice/js
+  cpp6:
+    container_name: cpp6
+    image: lcpolice/cpp
     ports:
       - "8086:8080"
 
-  web7 : 
-    container_name : JS2
-    image: lcpolice/js
+  cpp7:
+    container_name: cpp7
+    image: lcpolice/cpp
     ports:
       - "8087:8080"
 
-  web8 : 
-    container_name : JS3
-    image: lcpolice/js
+  cpp8:
+    container_name: cpp8
+    image: lcpolice/cpp
     ports:
       - "8088:8080"
 
-  web9 : 
-    container_name : JS4
-    image: lcpolice/js
+  cpp9:
+    container_name: cpp9
+    image: lcpolice/cpp
     ports:
       - "8089:8080"
 
-  web10 : 
-    container_name : JS5
-    image: lcpolice/js
+  cpp10:
+    container_name: cpp10
+    image: lcpolice/cpp
     ports:
       - "8090:8080"
 
-  web11 :
-    container_name : Java1
-    image : lcpolice/java
+  # JavaScript services
+  js1:
+    container_name: js1
+    image: lcpolice/js
     ports:
       - "8091:8080"
 
-  web12 : 
-    container_name : Java2
-    image: lcpolice/java
+  js2:
+    container_name: js2
+    image: lcpolice/js
     ports:
       - "8092:8080"
 
-  web13 : 
-    container_name : Java3
-    image: lcpolice/java
+  js3:
+    container_name: js3
+    image: lcpolice/js
     ports:
       - "8093:8080"
 
-  web14 : 
-    container_name : Java4
-    image: lcpolice/java
+  js4:
+    container_name: js4
+    image: lcpolice/js
     ports:
       - "8094:8080"
 
-  web15 : 
-    container_name : Java5
-    image: lcpolice/java
+  js5:
+    container_name: js5
+    image: lcpolice/js
     ports:
       - "8095:8080"
 
-  web16 : 
-    container_name : Py1
-    image : lcpolice/python
+  js6:
+    container_name: js6
+    image: lcpolice/js
     ports:
       - "8096:8080"
 
-  web17 : 
-    container_name : Py2
-    image: lcpolice/python
+  js7:
+    container_name: js7
+    image: lcpolice/js
     ports:
       - "8097:8080"
 
-  web18 : 
-    container_name : Py3
-    image: lcpolice/python
+  js8:
+    container_name: js8
+    image: lcpolice/js
     ports:
       - "8098:8080"
 
-  web19 : 
-    container_name : Py4
-    image: lcpolice/python
+  js9:
+    container_name: js9
+    image: lcpolice/js
     ports:
       - "8099:8080"
 
-  web20 : 
-    container_name : Py5
-    image: lcpolice/python
+  js10:
+    container_name: js10
+    image: lcpolice/js
     ports:
       - "8100:8080"
 
+  # Java services
+  java1:
+    container_name: java1
+    image: lcpolice/java
+    ports:
+      - "8101:8080"
 
-  
+  java2:
+    container_name: java2
+    image: lcpolice/java
+    ports:
+      - "8102:8080"
+
+  java3:
+    container_name: java3
+    image: lcpolice/java
+    ports:
+      - "8103:8080"
+
+  java4:
+    container_name: java4
+    image: lcpolice/java
+    ports:
+      - "8104:8080"
+
+  java5:
+    container_name: java5
+    image: lcpolice/java
+    ports:
+      - "8105:8080"
+
+  java6:
+    container_name: java6
+    image: lcpolice/java
+    ports:
+      - "8106:8080"
+
+  java7:
+    container_name: java7
+    image: lcpolice/java
+    ports:
+      - "8107:8080"
+
+  java8:
+    container_name: java8
+    image: lcpolice/java
+    ports:
+      - "8108:8080"
+
+  java9:
+    container_name: java9
+    image: lcpolice/java
+    ports:
+      - "8109:8080"
+
+  java10:
+    container_name: java10
+    image: lcpolice/java
+    ports:
+      - "8110:8080"
+
+  # Python services
+  py1:
+    container_name: py1
+    image: lcpolice/python
+    ports:
+      - "8111:8080"
+
+  py2:
+    container_name: py2
+    image: lcpolice/python
+    ports:
+      - "8112:8080"
+
+  py3:
+    container_name: py3
+    image: lcpolice/python
+    ports:
+      - "8113:8080"
+
+  py4:
+    container_name: py4
+    image: lcpolice/python
+    ports:
+      - "8114:8080"
+
+  py5:
+    container_name: py5
+    image: lcpolice/python
+    ports:
+      - "8115:8080"
+
+  py6:
+    container_name: py6
+    image: lcpolice/python
+    ports:
+      - "8116:8080"
+
+  py7:
+    container_name: py7
+    image: lcpolice/python
+    ports:
+      - "8117:8080"
+
+  py8:
+    container_name: py8
+    image: lcpolice/python
+    ports:
+      - "8118:8080"
+
+  py9:
+    container_name: py9
+    image: lcpolice/python
+    ports:
+      - "8119:8080"
+
+  py10:
+    container_name: py10
+    image: lcpolice/python
+    ports:
+      - "8120:8080"

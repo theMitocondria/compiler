@@ -7,154 +7,165 @@ import (
 	"io"
 	"net/http"
 	"sync"
+	"time"
 
 	codeTypes "github.com/theMitocondria/compiler/internal/types/code"
 	"github.com/theMitocondria/compiler/internal/utils/dataStructs"
 )
 
-var cppPorts = dataStructs.InitializeQueue([]int{8081, 8082, 8083, 8084, 8085})
-var jsPorts = dataStructs.InitializeQueue([]int{8086, 8087, 8088, 8089, 8090})
-var javaPorts = dataStructs.InitializeQueue([]int{8091, 8092, 8093, 8094, 8095})
-var pyPorts = dataStructs.InitializeQueue([]int{8096, 8097, 8098, 8099, 8100})
-var inExecution = 0
+// Port queues for each language
+var cppPorts = dataStructs.InitializeQueue([]int{8081, 8082, 8083, 8084, 8085, 8086, 8087, 8088, 8089, 8090})
+var jsPorts = dataStructs.InitializeQueue([]int{8091, 8092, 8093, 8094, 8095, 8096, 8097, 8098, 8099, 8100})
+var javaPorts = dataStructs.InitializeQueue([]int{8101, 8102, 8103, 8104, 8105, 8106, 8107, 8108, 8109, 8110})
+var pyPorts = dataStructs.InitializeQueue([]int{8111, 8112, 8113, 8114, 8115, 8116, 8117, 8118, 8119, 8120})
 
-var mutex sync.Mutex
+// Mutexes for port queues
+var cppPortsMutex, jsPortsMutex, javaPortsMutex, pyPortsMutex sync.Mutex
+
+// Job queue and worker pool
+var jobQueue = make(chan CodeExecutionRequestWithResponse, 500) // Buffer size can be adjusted
+var workers = 10                                                // Number of workers
+var wg sync.WaitGroup
+
+type CodeExecutionRequestWithResponse struct {
+	Request  codeTypes.CodeExecutionRequest
+	Response chan<- codeTypes.CodeExecutionResponse
+}
+
+func init() {
+	// Start the workers
+	for i := 0; i < workers; i++ {
+		go worker()
+	}
+}
 
 func pushPort(Lang string, emptyPort int) {
 	switch Lang {
 	case "cpp":
+		cppPortsMutex.Lock()
 		cppPorts.Push(emptyPort)
+		cppPortsMutex.Unlock()
 	case "js":
+		jsPortsMutex.Lock()
 		jsPorts.Push(emptyPort)
+		jsPortsMutex.Unlock()
 		fmt.Println(jsPorts)
 	case "java":
+		javaPortsMutex.Lock()
 		javaPorts.Push(emptyPort)
+		javaPortsMutex.Unlock()
 	case "python":
+		pyPortsMutex.Lock()
 		pyPorts.Push(emptyPort)
+		pyPortsMutex.Unlock()
 	}
+}
+
+func worker() {
+	for reqWithResponse := range jobQueue {
+		var response codeTypes.CodeExecutionResponse
+		processRequest(reqWithResponse.Request, &response)
+		reqWithResponse.Response <- response
+		wg.Done()
+	}
+}
+
+func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.CodeExecutionResponse) {
+	var emptyPort int
+	var err error
+
+	switch req.Lang {
+	case "cpp":
+		cppPortsMutex.Lock()
+		emptyPort, err = cppPorts.Pop()
+		cppPortsMutex.Unlock()
+	case "js":
+		jsPortsMutex.Lock()
+		emptyPort, err = jsPorts.Pop()
+		jsPortsMutex.Unlock()
+	case "java":
+		javaPortsMutex.Lock()
+		emptyPort, err = javaPorts.Pop()
+		javaPortsMutex.Unlock()
+	case "python":
+		pyPortsMutex.Lock()
+		emptyPort, err = pyPorts.Pop()
+		pyPortsMutex.Unlock()
+	default:
+		*response = codeTypes.CodeExecutionResponse{Error: "Unsupported language"}
+		return
+	}
+
+	// Prepare the request body to forward
+	reqBody, err := json.Marshal(req)
+	if err != nil {
+		*response = codeTypes.CodeExecutionResponse{Error: "Failed to marshal request body"}
+		pushPort(req.Lang, emptyPort)
+		return
+	}
+
+	// Make the POST request to the specified port
+	postURL := fmt.Sprintf("http://0.0.0.0:%d/compile", emptyPort)
+	httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
+	if err != nil {
+		*response = codeTypes.CodeExecutionResponse{Error: err.Error()}
+		pushPort(req.Lang, emptyPort)
+		return
+	}
+	defer httpResp.Body.Close()
+
+	// Read the response from the POST request
+	respBody, err := io.ReadAll(httpResp.Body)
+	if err != nil {
+		*response = codeTypes.CodeExecutionResponse{Error: "Failed to read response body"}
+		pushPort(req.Lang, emptyPort)
+		return
+	}
+
+	var compilerResponse codeTypes.CodeExecutionResponse
+	if err := json.Unmarshal(respBody, &compilerResponse); err != nil {
+		*response = codeTypes.CodeExecutionResponse{Error: "Failed to unmarshal response body"}
+		pushPort(req.Lang, emptyPort)
+		return
+	}
+
+	*response = codeTypes.CodeExecutionResponse{
+		Output: compilerResponse.Output,
+		Error:  compilerResponse.Error,
+	}
+
+	// Push the port back to the queue after use
+	pushPort(req.Lang, emptyPort)
 }
 
 func CompileCode() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req codeTypes.CodeExecutionRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			w.WriteHeader(http.StatusBadRequest)
 			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Failed to parse the body"})
 			return
 		}
 
-		var response codeTypes.CodeExecutionResponse
-		var wg sync.WaitGroup
+		responseChan := make(chan codeTypes.CodeExecutionResponse)
 
 		wg.Add(1)
-		go func() {
-			defer wg.Done()
+		jobQueue <- CodeExecutionRequestWithResponse{
+			Request:  req,
+			Response: responseChan,
+		}
 
-			for inExecution == 5 {
+		select {
+		case response := <-responseChan:
+			// Set the status code only if it hasn't been set by Write or WriteHeader
+			if w.Header().Get("Content-Type") == "" {
+				w.WriteHeader(http.StatusOK)
 			}
-
-			mutex.Lock()
-			inExecution++
-			mutex.Unlock()
-
-			var emptyPort int
-			var err error
-			mutex.Lock()
-			switch req.Lang {
-			case "cpp":
-				emptyPort, err = cppPorts.Pop()
-			case "js":
-				emptyPort, err = jsPorts.Pop()
-			case "java":
-				emptyPort, err = javaPorts.Pop()
-			case "py":
-				emptyPort, err = pyPorts.Pop()
-			default:
-				response.Error = "Unsupported language"
-				json.NewEncoder(w).Encode(response)
-				mutex.Lock()
-				inExecution--
-				pushPort(req.Lang, emptyPort)
-				mutex.Unlock()
-				return
-			}
-
-			mutex.Unlock()
-
-			if err != nil {
-				response.Error = "No available ports"
-				json.NewEncoder(w).Encode(response)
-				mutex.Lock()
-				pushPort(req.Lang, emptyPort)
-				inExecution--
-				mutex.Unlock()
-				return
-			}
-
-			// Prepare the request body to forward
-			reqBody, err := json.Marshal(req)
-			if err != nil {
-				response.Error = "Failed to marshal request body"
-				json.NewEncoder(w).Encode(response)
-				mutex.Lock()
-				pushPort(req.Lang, emptyPort)
-				inExecution--
-				mutex.Unlock()
-				return
-			}
-
-			// Make the POST request to the specified port
-			postURL := fmt.Sprintf("http://0.0.0.0:%d/compile", emptyPort)
-			httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
-			fmt.Println(postURL)
-			// fmt.Println(string(reqBody))
-			// print(err)
-			if err != nil {
-				// response.Error = "Failed to make POST request"
-				response.Error = err.Error()
-				json.NewEncoder(w).Encode(response)
-				mutex.Lock()
-				pushPort(req.Lang, emptyPort)
-				inExecution--
-				mutex.Unlock()
-				return
-			}
-			defer httpResp.Body.Close()
-
-			// Read the response from the POST request
-			respBody, err := io.ReadAll(httpResp.Body)
-			if err != nil {
-				response.Error = "Failed to read response body"
-				json.NewEncoder(w).Encode(response)
-				mutex.Lock()
-				pushPort(req.Lang, emptyPort)
-				inExecution--
-				mutex.Unlock()
-				return
-			}
-
-			var compilerResponse codeTypes.CodeExecutionResponse
-			if err := json.Unmarshal(respBody, &compilerResponse); err != nil {
-				response.Error = "Failed to unmarhsal response body"
-				json.NewEncoder(w).Encode(response)
-				mutex.Lock()
-				pushPort(req.Lang, emptyPort)
-				inExecution--
-				mutex.Unlock()
-				return
-			}
-
-			response.Output = compilerResponse.Output
-			response.Error = compilerResponse.Error
-			// Push the port back to the queue after use
-
-			mutex.Lock()
-			inExecution--
-			pushPort(req.Lang, emptyPort)
-			mutex.Unlock()
-
+			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
-		}()
-
-		wg.Wait()
+		case <-time.After(30 * time.Second): // Timeout after 30 seconds
+			w.WriteHeader(http.StatusRequestTimeout)
+			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Compilation timed out"})
+		}
 	}
 }
