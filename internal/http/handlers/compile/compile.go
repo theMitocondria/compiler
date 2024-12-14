@@ -58,7 +58,7 @@ func CompileCode() http.HandlerFunc {
 
 			var emptyPort int
 			var err error
-
+			mutex.Lock()
 			switch req.Lang {
 			case "cpp":
 				emptyPort, err = cppPorts.Pop()
@@ -77,6 +77,8 @@ func CompileCode() http.HandlerFunc {
 				mutex.Unlock()
 				return
 			}
+
+			mutex.Unlock()
 
 			if err != nil {
 				response.Error = "No available ports"
@@ -101,7 +103,7 @@ func CompileCode() http.HandlerFunc {
 			}
 
 			// Make the POST request to the specified port
-			postURL := fmt.Sprintf("http://localhost:%d/compile", emptyPort)
+			postURL := fmt.Sprintf("http://0.0.0.0:%d/compile", emptyPort)
 			httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
 			fmt.Println(postURL)
 			// fmt.Println(string(reqBody))
@@ -130,9 +132,19 @@ func CompileCode() http.HandlerFunc {
 				return
 			}
 
-			// response.Output = respBody.output)
-			print(respBody)
+			var compilerResponse codeTypes.CodeExecutionResponse
+			if err := json.Unmarshal(respBody, &compilerResponse); err != nil {
+				response.Error = "Failed to unmarhsal response body"
+				json.NewEncoder(w).Encode(response)
+				mutex.Lock()
+				pushPort(req.Lang, emptyPort)
+				inExecution--
+				mutex.Unlock()
+				return
+			}
 
+			response.Output = compilerResponse.Output
+			response.Error = compilerResponse.Error
 			// Push the port back to the queue after use
 
 			mutex.Lock()
@@ -146,36 +158,3 @@ func CompileCode() http.HandlerFunc {
 		wg.Wait()
 	}
 }
-
-// 			fmt.Println(fmt.Sprintf("http://localhost:%s/compile", container.Port))
-// 			resp, err := http.Post(fmt.Sprintf("http://localhost:%s/compile", container.Port), "application/json", bytes.NewBuffer(payload))
-// 			if err != nil {
-// 				errorChan <- fmt.Errorf("Failed to send request to container")
-// 				return
-// 			}
-
-// 			defer resp.Body.Close()
-// 			respBody, err := io.ReadAll(resp.Body)
-// 			if err != nil {
-// 				errorChan <- fmt.Errorf("Failed to read response from container")
-// 				return
-// 			}
-
-// 			var result codeTypes.CodeExecutionResponse
-// 			if err := json.Unmarshal(respBody, &result); err != nil {
-// 				errorChan <- fmt.Errorf("Failed to unmarshal response")
-// 				return
-// 			}
-
-// 			resultChan <- result
-// 		}()
-
-// 		select {
-// 		case result := <-resultChan:
-// 			w.Header().Set("Content-Type", "application/json")
-// 			json.NewEncoder(w).Encode(result)
-// 		case err := <-errorChan:
-// 			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": err.Error()})
-// 		}
-// 	}
-// }
