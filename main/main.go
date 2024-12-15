@@ -11,7 +11,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/theMitocondria/compiler/internal/http/routers/compile"
+	compile "github.com/theMitocondria/compiler/internal/http/handlers/compile"
 	spincontainers "github.com/theMitocondria/compiler/internal/utils/spinContainers"
 )
 
@@ -25,12 +25,12 @@ func main() {
 	}()
 
 	// Setup router
-	router := compile.InitRouter()
+	http.HandleFunc("POST /api/v1/compile", compile.CompileCode())
 
 	// Setup server
 	server := &http.Server{
 		Addr:    "localhost:3000",
-		Handler: router,
+		Handler: nil,
 	}
 
 	// slog.Info("server started")
