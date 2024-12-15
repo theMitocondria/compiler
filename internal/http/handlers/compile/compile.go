@@ -49,7 +49,6 @@ func pushPort(Lang string, emptyPort int) {
 		jsPortsMutex.Lock()
 		jsPorts.Push(emptyPort)
 		jsPortsMutex.Unlock()
-		fmt.Println(jsPorts)
 	case "java":
 		javaPortsMutex.Lock()
 		javaPorts.Push(emptyPort)
@@ -104,8 +103,19 @@ func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.Code
 		return
 	}
 
+	var portName string
+	if emptyPort-8080 <= 10 {
+		portName = fmt.Sprintf("cpp%d", emptyPort-8080)
+	} else if emptyPort-8080 <= 20 {
+		portName = fmt.Sprintf("js%d", emptyPort-8090)
+	} else if emptyPort-8080 <= 30 {
+		portName = fmt.Sprintf("java%d", emptyPort-8100)
+	} else {
+		portName = fmt.Sprintf("py%d", emptyPort-8110)
+	}
 	// Make the POST request to the specified port
-	postURL := fmt.Sprintf("http://0.0.0.0:%d/compile", emptyPort)
+	postURL := fmt.Sprintf("http://%s:8080/compile", portName)
+	fmt.Println(postURL)
 	httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
 		*response = codeTypes.CodeExecutionResponse{Error: err.Error()}

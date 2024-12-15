@@ -1,66 +1,118 @@
 version: '3'
 
 services:
+  main_container:
+    image: go
+    container_name: main_container
+    ports:
+      - "3000:3000"
+    networks:
+      - mynetwork
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: ["./main"]
+
   # C++ services
   cpp1:
     container_name: cpp1
     image: lcpolice/cpp
     ports:
       - "8081:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp2:
     container_name: cpp2
     image: lcpolice/cpp
     ports:
       - "8082:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp3:
     container_name: cpp3
     image: lcpolice/cpp
     ports:
       - "8083:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp4:
     container_name: cpp4
     image: lcpolice/cpp
     ports:
       - "8084:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp5:
     container_name: cpp5
     image: lcpolice/cpp
     ports:
       - "8085:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp6:
     container_name: cpp6
     image: lcpolice/cpp
     ports:
       - "8086:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp7:
     container_name: cpp7
     image: lcpolice/cpp
     ports:
       - "8087:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp8:
     container_name: cpp8
     image: lcpolice/cpp
     ports:
       - "8088:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp9:
     container_name: cpp9
     image: lcpolice/cpp
     ports:
       - "8089:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   cpp10:
     container_name: cpp10
     image: lcpolice/cpp
     ports:
       - "8090:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   # JavaScript services
   js1:
@@ -68,60 +120,100 @@ services:
     image: lcpolice/js
     ports:
       - "8091:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js2:
     container_name: js2
     image: lcpolice/js
     ports:
       - "8092:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js3:
     container_name: js3
     image: lcpolice/js
     ports:
       - "8093:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js4:
     container_name: js4
     image: lcpolice/js
     ports:
       - "8094:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js5:
     container_name: js5
     image: lcpolice/js
     ports:
       - "8095:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js6:
     container_name: js6
     image: lcpolice/js
     ports:
       - "8096:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js7:
     container_name: js7
     image: lcpolice/js
     ports:
       - "8097:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js8:
     container_name: js8
     image: lcpolice/js
     ports:
       - "8098:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js9:
     container_name: js9
     image: lcpolice/js
     ports:
       - "8099:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   js10:
     container_name: js10
     image: lcpolice/js
     ports:
       - "8100:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   # Java services
   java1:
@@ -129,60 +221,100 @@ services:
     image: lcpolice/java
     ports:
       - "8101:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java2:
     container_name: java2
     image: lcpolice/java
     ports:
       - "8102:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java3:
     container_name: java3
     image: lcpolice/java
     ports:
       - "8103:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java4:
     container_name: java4
     image: lcpolice/java
     ports:
       - "8104:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java5:
     container_name: java5
     image: lcpolice/java
     ports:
       - "8105:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java6:
     container_name: java6
     image: lcpolice/java
     ports:
       - "8106:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java7:
     container_name: java7
     image: lcpolice/java
     ports:
       - "8107:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java8:
     container_name: java8
     image: lcpolice/java
     ports:
       - "8108:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java9:
     container_name: java9
     image: lcpolice/java
     ports:
       - "8109:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   java10:
     container_name: java10
     image: lcpolice/java
     ports:
       - "8110:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   # Python services
   py1:
@@ -190,57 +322,102 @@ services:
     image: lcpolice/python
     ports:
       - "8111:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py2:
     container_name: py2
     image: lcpolice/python
     ports:
       - "8112:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py3:
     container_name: py3
     image: lcpolice/python
     ports:
       - "8113:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py4:
     container_name: py4
     image: lcpolice/python
     ports:
       - "8114:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py5:
     container_name: py5
     image: lcpolice/python
     ports:
       - "8115:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py6:
     container_name: py6
     image: lcpolice/python
     ports:
       - "8116:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py7:
     container_name: py7
     image: lcpolice/python
     ports:
       - "8117:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py8:
     container_name: py8
     image: lcpolice/python
     ports:
       - "8118:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py9:
     container_name: py9
     image: lcpolice/python
     ports:
       - "8119:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
 
   py10:
     container_name: py10
     image: lcpolice/python
     ports:
       - "8120:8080"
+    networks:
+      - mynetwork
+    depends_on:
+      - main_container
+
+networks: 
+  mynetwork: 
+    driver: bridge
+  
