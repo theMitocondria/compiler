@@ -1,18 +1,36 @@
-#smallest 300 MB
-#docker rmi nameofimage : remove image
-#docker rm nameofcontainer :  remove container
-#docker container ls : list container
-#docker run --rm -it <nameofimahe> : run a container of given image and (--rm) to remove it as soon as it is stopped (-it) for interactive like cli -p <p1>:<p2> for assingning p1 to p2 in docker
-#docker build . -t <custom name>
-#docker images : to list all images
+# Use a specific version of the base image
+FROM frolvlad/alpine-gxx:latest AS build
 
-FROM frolvlad/alpine-gxx
+# Install Go in a separate stage
+FROM golang:1.13-alpine AS go-builder
 
-COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
- 
+# Set up Go environment
 ENV PATH="/usr/local/go/bin:${PATH}"
 
-COPY server.go server.go
+# Copy Go source code
+COPY server.go /go/src/app/server.go
 
-CMD ["go", "run", "server.go"]
+# Build the Go binary
+WORKDIR /go/src/app
+RUN go build -o /go/bin/server server.go
 
+# Final stage: use a minimal base image
+FROM frolvlad/alpine-gxx:latest
+
+# Copy the Go binary from the builder stage
+COPY --from=go-builder /go/bin/server /usr/local/bin/server
+
+# Create a non-root user and set permissions
+RUN adduser -D -u 1000 myuser && \
+    mkdir -p /home/myuser && \
+    chown -R myuser:myuser /home/myuser && \
+    chown -R myuser:myuser /tmp
+
+# Switch to the non-root user
+USER myuser
+
+# Expose the necessary port (if needed)
+EXPOSE 8080
+
+# Command to run the Go server
+CMD ["server"]

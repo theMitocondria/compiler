@@ -1,17 +1,42 @@
+# Stage 1: Build the Go application
+FROM golang:1.13-alpine AS builder
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the Go source code
+COPY server.go .
+
+# Build the Go binary
+RUN go build -o server server.go
+
+# Stage 2: Create the final runtime image
 FROM alpine:3.19
 
 # Set the JAVA_HOME environment variable
 ENV JAVA_HOME=/usr/lib/jvm/default-jvm
 
 # Install Java (OpenJDK 17)
-RUN apk add --no-cache openjdk17 && \
+RUN apk add --no-cache openjdk17-jdk python3 py3-pip && \
     ln -sf "${JAVA_HOME}/bin/"* "/usr/bin/"
 
-# Install Go
-RUN apk add --no-cache go
+# Copy the Go binary from the builder stage
+COPY --from=builder /app/server /usr/local/bin/server
 
-# Copy the server.go file into the container
-COPY server.go server.go
+# Copy the Python script for class name extraction
+COPY server.py /usr/local/bin/server.py
+
+# Create a non-root user and set permissions
+RUN adduser -D -u 1000 myuser && \
+    mkdir -p /home/myuser && \
+    chown -R myuser:myuser /home/myuser && \
+    chown -R myuser:myuser /tmp
+
+# Switch to the non-root user
+USER myuser
+
+# Expose the necessary port
+EXPOSE 8080
 
 # Command to run the Go server
-CMD ["go", "run", "server.go"]
+CMD ["server"]

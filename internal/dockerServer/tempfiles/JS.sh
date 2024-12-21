@@ -6,30 +6,6 @@
 #Security checks remaining
 
 cat << EOF > temp.js
-const readline = require('readline');
-
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
-function sieveOfEratosthenes(n) {
-    let count = 0;
-    for (let i = 0 ; i < n ; i++ ){
-        for(let j = 0 ; j < n ; j++){
-            count++;
-        }
-    }
-    console.log(count);
-}
-
-// Take input from the user using readline
-rl.question("", function(input) {
-    const n = parseInt(input);  // Convert input to integer
-    sieveOfEratosthenes(n);  // Call the function with user input
-    rl.close();  // Close the readline interface
-});
-
 
 EOF
 

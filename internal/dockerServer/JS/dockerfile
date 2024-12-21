@@ -1,11 +1,25 @@
+FROM golang:1.13-alpine AS go-builder
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go source code into the build environment
+COPY server.go .
+
+# Build the Go binary
+RUN go build -o server server.go
+
+# Step 2: Create a smaller image for running the Node.js environment with the Go application
 FROM mhart/alpine-node:latest
 
-COPY check.js check.js
+# Set the working directory
+WORKDIR /app
 
-COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
- 
-ENV PATH="/usr/local/go/bin:${PATH}"
+# Copy the compiled Go binary from the Go builder
+COPY --from=go-builder /app/server .
 
-COPY server.go server.go
+# Expose any necessary ports (adjust as needed)
+EXPOSE 8080
 
-CMD ["go", "run", "server.go"]
+# Set the command to run the compiled Go server
+CMD ["./server"]

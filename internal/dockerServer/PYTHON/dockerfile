@@ -1,11 +1,20 @@
-#smallest 95 MB
+# Step 1: Build the Go application
+FROM golang:1.13-alpine AS builder
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Go source code into the build environment
+COPY server.go .
+
+# Build the Go binary
+RUN go build -o server server.go
+
+# Step 2: Create a smaller image for running the application
 FROM frolvlad/alpine-python3
 
-COPY --from=golang:1.13-alpine /usr/local/go/ /usr/local/go/
- 
-ENV PATH="/usr/local/go/bin:${PATH}"
+# Copy the compiled Go binary from the builder
+COPY --from=builder /app/server /server
 
-COPY server.go server.go
-
-
-CMD ["go", "run", "server.go"]
+# Set the command to run the binary
+CMD ["/server"]
