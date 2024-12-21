@@ -9,8 +9,11 @@ type CodeExecutionRequest struct {
 }
 
 type CodeExecutionResponse struct {
-	Output string `json:"output"`
-	Error  string `json:"error"`
+	Output struct {
+		CodeOutput string `json:"code_output"`
+		CodeError  string `json:"code_error"`
+	} `json:"output"`
+	Error string `json:"error"`
 }
 
 type Container struct {

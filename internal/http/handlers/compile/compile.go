@@ -97,6 +97,7 @@ func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.Code
 
 	// Prepare the request body to forward
 	reqBody, err := json.Marshal(req)
+
 	if err != nil {
 		*response = codeTypes.CodeExecutionResponse{Error: "Failed to marshal request body"}
 		pushPort(req.Lang, emptyPort)
@@ -115,17 +116,20 @@ func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.Code
 	}
 	// Make the POST request to the specified port
 	postURL := fmt.Sprintf("http://%s:8080/compile", portName)
-	fmt.Println(postURL)
+	fmt.Println(portName)
+
 	httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
 	if err != nil {
 		*response = codeTypes.CodeExecutionResponse{Error: err.Error()}
 		pushPort(req.Lang, emptyPort)
 		return
 	}
+
 	defer httpResp.Body.Close()
 
 	// Read the response from the POST request
 	respBody, err := io.ReadAll(httpResp.Body)
+
 	if err != nil {
 		*response = codeTypes.CodeExecutionResponse{Error: "Failed to read response body"}
 		pushPort(req.Lang, emptyPort)
@@ -136,6 +140,7 @@ func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.Code
 	if err := json.Unmarshal(respBody, &compilerResponse); err != nil {
 		*response = codeTypes.CodeExecutionResponse{Error: "Failed to unmarshal response body"}
 		pushPort(req.Lang, emptyPort)
+
 		return
 	}
 
@@ -167,15 +172,14 @@ func CompileCode() http.HandlerFunc {
 
 		select {
 		case response := <-responseChan:
-			// Set the status code only if it hasn't been set by Write or WriteHeader
 			if w.Header().Get("Content-Type") == "" {
 				w.WriteHeader(http.StatusOK)
 			}
 			w.Header().Set("Content-Type", "application/json")
 			json.NewEncoder(w).Encode(response)
-		case <-time.After(30 * time.Second): // Timeout after 30 seconds
+		case <-time.After(60 * time.Second): // Timeout after 30 seconds
 			w.WriteHeader(http.StatusRequestTimeout)
-			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Compilation timed out"})
+			json.NewEncoder(w).Encode(map[string]string{"output": "", "error": "Compilation timed out please retry"})
 		}
 	}
 }

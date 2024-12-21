@@ -16,7 +16,7 @@ services:
 
   # C++ services
   cpp1:
-    container_name: cpp1
+    container_name: cpp1s
     image: lcpolice/cpp:1.2.0
     ports:
       - "8081:8080"
@@ -175,488 +175,488 @@ services:
       timeout: 10s
       retries: 3
 
-  # JavaScript services
-  js1:
-    container_name: js1
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8091:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # # JavaScript services
+  # js1:
+  #   container_name: js1
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8091:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js2:
-    container_name: js2
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8092:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js2:
+  #   container_name: js2
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8092:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js3:
-    container_name: js3
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8093:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js3:
+  #   container_name: js3
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8093:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js4:
-    container_name: js4
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8094:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js4:
+  #   container_name: js4
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8094:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js5:
-    container_name: js5
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8095:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js5:
+  #   container_name: js5
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8095:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js6:
-    container_name: js6
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8096:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js6:
+  #   container_name: js6
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8096:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js7:
-    container_name: js7
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8097:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js7:
+  #   container_name: js7
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8097:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js8:
-    container_name: js8
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8098:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js8:
+  #   container_name: js8
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8098:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js9:
-    container_name: js9
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8099:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js9:
+  #   container_name: js9
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8099:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  js10:
-    container_name: js10
-    image: lcpolice/js:1.2.0
-    ports:
-      - "8100:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "node", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # js10:
+  #   container_name: js10
+  #   image: lcpolice/js:1.2.0
+  #   ports:
+  #     - "8100:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "node", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  # Java services
-  java1:
-    container_name: java1
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8101:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # # Java services
+  # java1:
+  #   container_name: java1
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8101:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java2:
-    container_name: java2
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8102:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java2:
+  #   container_name: java2
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8102:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java3:
-    container_name: java3
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8103:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java3:
+  #   container_name: java3
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8103:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java4:
-    container_name: java4
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8104:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java4:
+  #   container_name: java4
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8104:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java5:
-    container_name: java5
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8105:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java5:
+  #   container_name: java5
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8105:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java6:
-    container_name: java6
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8106:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java6:
+  #   container_name: java6
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8106:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java7:
-    container_name: java7
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8107:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java7:
+  #   container_name: java7
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8107:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java8:
-    container_name: java8
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8108:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java8:
+  #   container_name: java8
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8108:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java9:
-    container_name: java9
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8109:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java9:
+  #   container_name: java9
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8109:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  java10:
-    container_name: java10
-    image: lcpolice/java:1.2.0
-    ports:
-      - "8110:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "java", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # java10:
+  #   container_name: java10
+  #   image: lcpolice/java:1.2.0
+  #   ports:
+  #     - "8110:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "java", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  # Python services
-  py1:
-    container_name: py1
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8111:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # # Python services
+  # py1:
+  #   container_name: py1
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8111:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py2:
-    container_name: py2
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8112:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py2:
+  #   container_name: py2
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8112:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py3:
-    container_name: py3
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8113:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py3:
+  #   container_name: py3
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8113:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py4:
-    container_name: py4
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8114:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py4:
+  #   container_name: py4
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8114:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py5:
-    container_name: py5
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8115:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py5:
+  #   container_name: py5
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8115:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py6:
-    container_name: py6
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8116:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py6:
+  #   container_name: py6
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8116:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py7:
-    container_name: py7
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8117:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py7:
+  #   container_name: py7
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8117:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py8:
-    container_name: py8
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8118:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py8:
+  #   container_name: py8
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8118:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py9:
-    container_name: py9
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8119:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py9:
+  #   container_name: py9
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8119:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
 
-  py10:
-    container_name: py10
-    image: lcpolice/python:1.2.0
-    ports:
-      - "8120:8080"
-    networks:
-      - mynetwork
-    depends_on:
-      - main_container
-    restart: on-failure
-    healthcheck:
-      test: ["CMD", "python3", "--version"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+  # py10:
+  #   container_name: py10
+  #   image: lcpolice/python:1.2.0
+  #   ports:
+  #     - "8120:8080"
+  #   networks:
+  #     - mynetwork
+  #   depends_on:
+  #     - main_container
+  #   restart: on-failure
+  #   healthcheck:
+  #     test: ["CMD", "python3", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
      
 networks: 
   mynetwork: 
