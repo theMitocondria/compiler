@@ -69,6 +69,9 @@ func worker() {
 	}
 }
 
+var inputValues = []string{"khatri", "dhurv", "gautam", "navya", "mehta", "shubham", "sahil", "saurabh", "siddharth", "siddharth"}
+var outputValues = []string{"irtahk", "vruhd", "matuag", "ayvan", "athem", "mahbuhs", "lihas", "hbaruas", "htrahddis", "htrahddis"}
+
 func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.CodeExecutionResponse) {
 	var emptyPort int
 	var err error
@@ -96,7 +99,6 @@ func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.Code
 	}
 
 	// Prepare the request body to forward
-	reqBody, err := json.Marshal(req)
 
 	if err != nil {
 		*response = codeTypes.CodeExecutionResponse{Error: "Failed to marshal request body"}
@@ -114,42 +116,59 @@ func processRequest(req codeTypes.CodeExecutionRequest, response *codeTypes.Code
 	} else {
 		portName = fmt.Sprintf("py%d", emptyPort-8110)
 	}
-	// Make the POST request to the specified port
+
 	postURL := fmt.Sprintf("http://%s:8080/compile", portName)
-	fmt.Println(portName)
 
-	httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
-	if err != nil {
-		*response = codeTypes.CodeExecutionResponse{Error: err.Error()}
-		pushPort(req.Lang, emptyPort)
-		return
-	}
+	for i, input := range inputValues {
+		req.Input = input
+		reqBody, err := json.Marshal(req)
+		if err != nil {
+			*response = codeTypes.CodeExecutionResponse{Error: "Failed to marshal request body"}
+			pushPort(req.Lang, emptyPort)
+			return
+		}
 
-	defer httpResp.Body.Close()
+		httpResp, err := http.Post(postURL, "application/json", bytes.NewBuffer(reqBody))
+		if err != nil {
+			*response = codeTypes.CodeExecutionResponse{Error: err.Error()}
+			pushPort(req.Lang, emptyPort)
+			return
+		}
 
-	// Read the response from the POST request
-	respBody, err := io.ReadAll(httpResp.Body)
+		defer httpResp.Body.Close()
 
-	if err != nil {
-		*response = codeTypes.CodeExecutionResponse{Error: "Failed to read response body"}
-		pushPort(req.Lang, emptyPort)
-		return
+		respBody, err := io.ReadAll(httpResp.Body)
+		if err != nil {
+			*response = codeTypes.CodeExecutionResponse{Error: "Failed to read response body"}
+			pushPort(req.Lang, emptyPort)
+			return
+		}
+
+		var compilerResponse codeTypes.CodeExecutionResponse
+		if err := json.Unmarshal(respBody, &compilerResponse); err != nil {
+			*response = codeTypes.CodeExecutionResponse{Error: "Failed to unmarshal response body"}
+			pushPort(req.Lang, emptyPort)
+			return
+		}
+
+		if compilerResponse.Error != ""  || compilerResponse.Output.CodeError != "" {
+			*response = compilerResponse
+			pushPort(req.Lang, emptyPort)
+			return
+		}
+
+		if compilerResponse.Output.CodeOutput != outputValues[i] {
+			compilerResponse.Output.CodeError = fmt.Sprintf("Output mismatch for input %s: expected %s, got %s", input, outputValues[i], compilerResponse.Output.CodeOutput)
+			*response = compilerResponse
+			pushPort(req.Lang, emptyPort)
+			return
+		}
 	}
 
 	var compilerResponse codeTypes.CodeExecutionResponse
-	if err := json.Unmarshal(respBody, &compilerResponse); err != nil {
-		*response = codeTypes.CodeExecutionResponse{Error: "Failed to unmarshal response body"}
-		pushPort(req.Lang, emptyPort)
+	compilerResponse.Output.CodeOutput = "All test cases passed"
+	*response = compilerResponse
 
-		return
-	}
-
-	*response = codeTypes.CodeExecutionResponse{
-		Output: compilerResponse.Output,
-		Error:  compilerResponse.Error,
-	}
-
-	// Push the port back to the queue after use
 	pushPort(req.Lang, emptyPort)
 }
 
