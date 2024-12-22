@@ -1,12 +1,12 @@
-IMAGE_NAME = go
-COMPOSE_FILE = docker-compose.yml
-
 # Targets
 .PHONY: build up down clean logs
 
 up:
-	docker build . -t $(IMAGE_NAME)
-	docker-compose -f $(COMPOSE_FILE) up -d
+	docker-compose up 
+
+build:
+	docker build . -t test
+	docker run --rm -it -p 3000:3000 --network=docker_mynetwork test
 
 down:
-	docker-compose -f $(COMPOSE_FILE) down
+	docker-compose down
