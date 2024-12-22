@@ -17,6 +17,8 @@ func main() {
 
 	// Setup router
 	http.HandleFunc("POST /api/v1/compile", compile.CompileCode())
+	http.HandleFunc("POST /api/v1/submit", compile.SubmitCode())
+	http.HandleFunc("GET /api/v1/systemTesting" , compile.SystemTesting())
 
 	// Setup server
 	server := &http.Server{
@@ -48,3 +50,22 @@ func main() {
 
 	fmt.Print("shutting down the server gracefull finally")
 }
+
+/*
+compile ki request ->
+	to purana wala compile ka code chlal
+
+agr testing ki aagai to ->
+	compile wale prre rdicret kr de bas
+	input ka loop ispe chalo or check kro
+
+naisubmit ki requset->
+  user se mila code and language
+  yha prr db ko call mari or submit k test acses mangva liye with input and outputs
+  yha se testing ko call mari with code lang and testcases array
+
+system testing mai
+	hum dege usko testcases  or jin bacho n us question ko submit kr diya
+	inke upper loop chala kr har users kacode, lang, testcases array ko testing k pass behjio
+
+*/

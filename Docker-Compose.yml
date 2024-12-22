@@ -3,7 +3,7 @@ version: '3'
 services:
   # C++ services
   cpp1:
-    container_name: cpp1s
+    container_name: cpp1
     image: lcpolice/cpp:1.2.0
     ports:
       - "8081:8080"
